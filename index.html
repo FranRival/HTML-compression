@@ -1,0 +1,1005 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>HTML Compression Test – Minifier &amp; Gzip/Brotli Checker</title>
+
+<meta name="description" content="Free HTML compression test. Minify HTML to reduce file size, and check if your server sends gzip or brotli compression. See bytes saved, reduction percentage, and optimization tips.">
+
+<meta name="keywords" content="html compression test, html minifier, compress html online, html gzip test, html brotli test, html compression checker, minify html free, html size reducer, gzip compression test, html optimization tool">
+
+<link rel="canonical" href="https://franrivalbigprojects.github.io/html-compression-checker/">
+
+<meta property="og:title" content="HTML Compression Test – Minifier and Gzip/Brotli Checker">
+<meta property="og:description" content="Minify HTML to reduce file size and check server gzip/brotli compression. Free, no login.">
+<meta property="og:type" content="website">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --bg: #f7f9fc;
+  --white: #ffffff;
+  --surface: #eef1f8;
+  --border: #dde2f0;
+  --border-dark: #c8cedf;
+  --accent: #0ea5e9;
+  --accent-dim: rgba(14,165,233,0.08);
+  --accent-dim2: rgba(14,165,233,0.04);
+  --green: #16a34a;
+  --green-bg: #f0fdf4;
+  --green-border: #bbf7d0;
+  --orange: #d97706;
+  --orange-bg: #fffbeb;
+  --orange-border: #fde68a;
+  --red: #dc2626;
+  --red-bg: #fef2f2;
+  --red-border: #fca5a5;
+  --purple: #7c3aed;
+  --purple-bg: #f5f3ff;
+  --purple-border: #ddd6fe;
+  --ink: #0f172a;
+  --ink-muted: #64748b;
+  --ink-dim: #94a3b8;
+  --mono: 'JetBrains Mono', monospace;
+  --sans: 'Inter', sans-serif;
+  --radius: 8px;
+  --shadow: 0 1px 3px rgba(0,0,0,0.07);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--sans);
+  background: var(--bg);
+  color: var(--ink);
+  min-height: 100vh;
+  line-height: 1.6;
+}
+
+header {
+  background: var(--white);
+  border-bottom: 1px solid var(--border);
+  padding: 12px 0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: var(--shadow);
+}
+
+.header-inner {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo-mark {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--accent);
+  background: var(--accent-dim);
+  border: 1px solid rgba(14,165,233,0.2);
+  border-radius: 4px;
+  padding: 3px 8px;
+}
+
+.logo-text {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--ink-muted);
+}
+
+.logo-text strong { color: var(--ink); font-weight: 500; }
+
+.wrapper { max-width: 960px; margin: 0 auto; padding: 0 20px 60px; }
+
+.hero {
+  padding: 32px 0 22px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 24px;
+}
+
+h1 {
+  font-size: clamp(20px, 3vw, 27px);
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 8px;
+  letter-spacing: -0.02em;
+}
+
+h1 em { font-style: normal; color: var(--accent); }
+
+.hero-sub {
+  font-size: 14px;
+  color: var(--ink-muted);
+  max-width: 580px;
+  line-height: 1.75;
+  margin-bottom: 14px;
+}
+
+.hero-sub strong { color: var(--ink); }
+
+.badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.badge {
+  font-family: var(--mono);
+  font-size: 11px;
+  padding: 3px 9px;
+  border-radius: 3px;
+  border: 1px solid var(--border-dark);
+  color: var(--ink-muted);
+  background: var(--white);
+}
+
+.badge.accent {
+  color: var(--accent);
+  background: var(--accent-dim);
+  border-color: rgba(14,165,233,0.2);
+}
+
+.tool-tabs {
+  display: flex;
+  border-bottom: 2px solid var(--border);
+  gap: 0;
+  margin-bottom: 0;
+}
+
+.tool-tab {
+  padding: 10px 22px;
+  font-size: 13px;
+  font-weight: 500;
+  font-family: var(--sans);
+  color: var(--ink-muted);
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.tool-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+.tool-tab:hover:not(.active) { color: var(--ink); }
+
+.tab-badge {
+  font-family: var(--mono);
+  font-size: 9px;
+  padding: 1px 5px;
+  border-radius: 3px;
+  background: var(--green-bg);
+  color: var(--green);
+  border: 1px solid var(--green-border);
+}
+
+.tab-badge-soon {
+  font-family: var(--mono);
+  font-size: 9px;
+  padding: 1px 5px;
+  border-radius: 3px;
+  background: var(--orange-bg);
+  color: var(--orange);
+  border: 1px solid var(--orange-border);
+}
+
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+.minifier-wrap {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-top: none;
+  border-radius: 0 0 var(--radius) var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.minifier-options {
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: center;
+  background: var(--surface);
+}
+
+.option-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-dim);
+  margin-right: 4px;
+}
+
+.check-option {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  color: var(--ink-muted);
+  cursor: pointer;
+  user-select: none;
+}
+
+.check-option input[type=checkbox] {
+  width: 14px;
+  height: 14px;
+  cursor: pointer;
+  accent-color: var(--accent);
+}
+
+.minifier-panels {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 340px;
+}
+
+.editor-side {
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid var(--border);
+}
+
+.panel-head {
+  padding: 7px 14px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  font-family: var(--mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-dim);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#htmlInput {
+  flex: 1;
+  width: 100%;
+  min-height: 300px;
+  padding: 12px 14px;
+  font-family: var(--mono);
+  font-size: 11px;
+  line-height: 1.6;
+  border: none;
+  background: var(--white);
+  color: var(--ink);
+  resize: none;
+}
+
+#htmlInput:focus { outline: none; }
+
+.output-side { display: flex; flex-direction: column; }
+
+#htmlOutput {
+  flex: 1;
+  min-height: 300px;
+  padding: 12px 14px;
+  font-family: var(--mono);
+  font-size: 11px;
+  line-height: 1.6;
+  background: var(--white);
+  color: var(--ink);
+  white-space: pre-wrap;
+  word-break: break-all;
+  overflow-y: auto;
+}
+
+.minifier-toolbar {
+  padding: 10px 18px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+  background: var(--surface);
+}
+
+.btn-compress {
+  padding: 8px 22px;
+  font-size: 14px;
+  font-family: var(--sans);
+  font-weight: 600;
+  background: var(--accent);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: opacity 0.15s, transform 0.1s;
+}
+
+.btn-compress:hover { opacity: 0.85; }
+.btn-compress:active { transform: scale(0.97); }
+
+.btn-sec {
+  padding: 7px 14px;
+  font-size: 12px;
+  font-family: var(--mono);
+  background: transparent;
+  color: var(--ink-muted);
+  border: 1px solid var(--border-dark);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: color 0.15s;
+}
+
+.btn-sec:hover { color: var(--ink); }
+
+.toolbar-stats {
+  margin-left: auto;
+  display: flex;
+  gap: 12px;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--ink-dim);
+}
+
+#statsRow {
+  display: none;
+  gap: 12px;
+  flex-wrap: wrap;
+  background: var(--surface);
+}
+
+.stat-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 12px 16px;
+  text-align: center;
+  box-shadow: var(--shadow);
+  min-width: 110px;
+}
+
+.stat-num {
+  font-family: var(--mono);
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1;
+  display: block;
+}
+
+.stat-lbl {
+  font-size: 11px;
+  color: var(--ink-dim);
+  margin-top: 3px;
+  font-family: var(--mono);
+}
+
+.gzip-row {
+  margin-top: 12px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.gzip-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: var(--shadow);
+}
+
+.gzip-label {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--ink-muted);
+  font-weight: 500;
+}
+
+.gzip-val {
+  font-family: var(--mono);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--green);
+}
+
+.gzip-note {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--ink-dim);
+}
+
+.http-wrap {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-top: none;
+  border-radius: 0 0 var(--radius) var(--radius);
+  padding: 24px;
+  box-shadow: var(--shadow);
+}
+
+.coming-banner {
+  background: var(--orange-bg);
+  border: 1px solid var(--orange-border);
+  border-left: 4px solid var(--orange);
+  border-radius: 6px;
+  padding: 14px 16px;
+  margin-bottom: 24px;
+  font-size: 13px;
+  color: var(--orange);
+  line-height: 1.6;
+}
+
+.coming-banner strong { color: #92400e; display: block; margin-bottom: 2px; }
+
+.url-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.url-input {
+  flex: 1;
+  padding: 11px 14px;
+  border: 1px solid var(--border-dark);
+  border-radius: 6px;
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--ink);
+  background: var(--bg);
+}
+
+.btn-test {
+  padding: 11px 24px;
+  font-size: 14px;
+  font-family: var(--sans);
+  font-weight: 600;
+  background: var(--surface);
+  color: var(--ink-muted);
+  border: 1px solid var(--border-dark);
+  border-radius: 6px;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.http-preview {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.http-result-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.hrc-head {
+  background: var(--white);
+  border-bottom: 1px solid var(--border);
+  padding: 9px 14px;
+  font-family: var(--mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-dim);
+}
+
+.hrc-body { padding: 14px; }
+
+.hrc-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 12px;
+}
+
+.hrc-row:last-child { border-bottom: none; }
+.hrc-key { color: var(--ink-muted); font-family: var(--mono); }
+
+.hrc-val-placeholder {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--border-dark);
+  background: var(--border);
+  border-radius: 3px;
+  padding: 2px 8px;
+}
+
+.badge-pending {
+  font-family: var(--mono);
+  font-size: 10px;
+  padding: 2px 8px;
+  border-radius: 3px;
+  background: var(--surface);
+  color: var(--ink-dim);
+  border: 1px solid var(--border);
+}
+
+.http-checklist {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.hcl-head {
+  background: var(--white);
+  border-bottom: 1px solid var(--border);
+  padding: 9px 14px;
+  font-family: var(--mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-dim);
+}
+
+.hcl-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 14px;
+  border-bottom: 1px solid var(--border);
+  font-size: 12px;
+  color: var(--ink-muted);
+}
+
+.hcl-item:last-child { border-bottom: none; }
+.hcl-icon { flex-shrink: 0; font-size: 14px; }
+
+hr.divider { border: none; border-top: 1px solid var(--border); margin: 40px 0; }
+
+.content-section { margin-bottom: 40px; }
+
+.section-eyebrow {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 8px;
+  display: block;
+}
+
+h3 {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 12px;
+  letter-spacing: -0.01em;
+}
+
+p {
+  font-size: 14px;
+  color: var(--ink-muted);
+  line-height: 1.8;
+  margin-bottom: 10px;
+}
+
+code {
+  font-family: var(--mono);
+  font-size: 12px;
+  background: var(--surface);
+  color: var(--accent);
+  padding: 2px 6px;
+  border-radius: 3px;
+  border: 1px solid var(--border);
+}
+
+.method-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.method-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  box-shadow: var(--shadow);
+}
+
+.mc-eye {
+  font-family: var(--mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--ink-dim);
+  margin-bottom: 6px;
+}
+
+.method-card strong {
+  font-size: 13px;
+  color: var(--ink);
+  display: block;
+  margin-bottom: 5px;
+}
+
+.method-card p { font-size: 12px; margin: 0; }
+
+.dense-block {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 22px;
+  margin-top: 14px;
+  box-shadow: var(--shadow);
+}
+
+.dense-block p {
+  margin-bottom: 14px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--border);
+  font-size: 14px;
+}
+
+.dense-block p:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
+.dense-block strong { color: var(--ink); }
+
+.faq-list {
+  margin-top: 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+
+.faq-item { border-bottom: 1px solid var(--border); }
+.faq-item:last-child { border-bottom: none; }
+
+.faq-q {
+  width: 100%;
+  text-align: left;
+  background: var(--white);
+  border: none;
+  padding: 13px 18px;
+  font-size: 14px;
+  color: var(--ink);
+  font-family: var(--sans);
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  transition: background 0.15s;
+  font-weight: 500;
+}
+
+.faq-q:hover { background: var(--accent-dim2); }
+
+.faq-arrow {
+  font-size: 11px;
+  color: var(--ink-dim);
+  transition: transform 0.2s;
+  flex-shrink: 0;
+  font-family: var(--mono);
+}
+
+.faq-item.open .faq-arrow { transform: rotate(180deg); }
+
+.faq-a {
+  display: none;
+  padding: 0 18px 13px;
+  font-size: 13px;
+  color: var(--ink-muted);
+  line-height: 1.75;
+  border-top: 1px solid var(--border);
+  background: var(--bg);
+}
+
+.faq-item.open .faq-a { display: block; }
+
+footer {
+  border-top: 1px solid var(--border);
+  background: var(--white);
+  padding: 18px 0;
+}
+
+.footer-inner {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+footer p {
+  font-size: 11px;
+  color: var(--ink-dim);
+  font-family: var(--mono);
+  margin: 0;
+}
+
+@media (max-width: 640px) {
+  .minifier-panels { grid-template-columns: 1fr; }
+  .editor-side { border-right: none; border-bottom: 1px solid var(--border); }
+  .method-grid { grid-template-columns: 1fr 1fr; }
+  .http-preview { grid-template-columns: 1fr; }
+  .toolbar-stats { display: none; }
+}
+</style>
+
+</head>
+
+<body>
+
+<header>
+  <div class="header-inner">
+    <span class="logo-mark">&lt;/&gt;</span>
+    <span class="logo-text"><strong>HTML</strong> Compression Test</span>
+  </div>
+</header>
+
+<div class="wrapper">
+
+  <section class="hero">
+    <h1><em>HTML Compression Test</em> &mdash; Minifier &amp; Gzip Checker</h1>
+    <p class="hero-sub">
+      <strong>Minify HTML</strong> to reduce file size, or test if your server sends <strong>gzip/brotli compression</strong>. See bytes saved, estimated compressed sizes, and optimization recommendations.
+    </p>
+    <div class="badges">
+      <span class="badge accent">HTML minifier</span>
+      <span class="badge accent">Gzip estimate</span>
+      <span class="badge">Brotli estimate</span>
+      <span class="badge">HTTP compression test</span>
+      <span class="badge">Free</span>
+    </div>
+  </section>
+
+  <div class="tool-tabs">
+    <button class="tool-tab active" onclick="switchTab('minify', this)">
+      HTML Minifier
+      <span class="tab-badge">Live</span>
+    </button>
+    <button class="tool-tab" onclick="switchTab('http', this)">
+      HTTP Compression Test
+      <span class="tab-badge-soon">Coming soon</span>
+    </button>
+  </div>
+
+  <div class="tab-panel active" id="tab-minify">
+    <div class="minifier-wrap">
+      <div class="minifier-options">
+        <span class="option-label">Options:</span>
+        <label class="check-option">
+          <input type="checkbox" id="optComments" checked>
+          Remove comments
+        </label>
+        <label class="check-option">
+          <input type="checkbox" id="optWhitespace" checked>
+          Collapse whitespace
+        </label>
+        <label class="check-option">
+          <input type="checkbox" id="optEmptyAttrs" checked>
+          Remove empty attributes
+        </label>
+        <label class="check-option">
+          <input type="checkbox" id="optCSS">
+          Minify inline CSS
+        </label>
+        <label class="check-option">
+          <input type="checkbox" id="optJS">
+          Minify inline JS
+        </label>
+      </div>
+
+
+  <div class="minifier-panels">
+    <div class="editor-side">
+      <div class="panel-head">
+        <span>Original HTML</span>
+        <span id="origInfo" style="color:var(--ink-dim)"></span>
+      </div>
+      <textarea id="htmlInput" spellcheck="false" oninput="onHtmlChange()"></textarea>
+    </div>
+    <div class="output-side">
+      <div class="panel-head">
+        <span>Minified Output</span>
+        <span id="outInfo" style="color:var(--ink-dim)"></span>
+      </div>
+      <div id="htmlOutput"></div>
+    </div>
+  </div>
+
+  <div class="minifier-toolbar">
+    <button class="btn-compress" onclick="doMinify()">Compress HTML</button>
+    <button class="btn-sec" onclick="doCopyOutput()">Copy</button>
+    <button class="btn-sec" onclick="loadSample()">Sample</button>
+    <button class="btn-sec" onclick="doClear()">Clear</button>
+    <div class="toolbar-stats">
+      <span id="statChars">0 chars</span>
+      <span id="statBytes">0 B</span>
+    </div>
+  </div>
+
+  <div id="statsRow">
+    <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:12px;">
+      <div class="stat-card">
+        <span class="stat-num" id="origSize" style="color:var(--ink-muted)">0</span>
+        <span class="stat-lbl">Original</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-num" id="minSize" style="color:var(--accent)">0</span>
+        <span class="stat-lbl">Minified</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-num" id="savedPct" style="color:var(--green)">0%</span>
+        <span class="stat-lbl">Reduced</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-num" id="savedBytes" style="color:var(--green)">0</span>
+        <span class="stat-lbl">Bytes saved</span>
+      </div>
+    </div>
+    <div class="gzip-row">
+      <div class="gzip-card">
+        <div>
+          <div class="gzip-label">gzip estimate</div>
+          <div class="gzip-note">~75% compression</div>
+        </div>
+        <div class="gzip-val" id="gzipEst">~0 KB</div>
+      </div>
+      <div class="gzip-card">
+        <div>
+          <div class="gzip-label">brotli estimate</div>
+          <div class="gzip-note">~80% compression</div>
+        </div>
+        <div class="gzip-val" id="brotliEst">~0 KB</div>
+      </div>
+      <div class="gzip-card" style="flex:1;">
+        <div>
+          <div class="gzip-label">Total transfer size (minified + gzip)</div>
+          <div class="gzip-note">What the browser receives</div>
+        </div>
+        <div class="gzip-val" id="transferEst">~0 KB</div>
+      </div>
+    </div>
+  </div>
+</div>
+```
+
+  </div>
+
+  <div class="tab-panel" id="tab-http">
+    <div class="http-wrap">
+      <div class="coming-banner">
+        <strong>HTTP Compression Test &mdash; Coming Soon</strong>
+        This tab will check if your server sends gzip or brotli Content-Encoding headers. Server-side infrastructure is required and currently in development.
+      </div>
+      <div class="url-row">
+        <input class="url-input" type="text" id="urlInput" placeholder="https://example.com" disabled>
+        <button class="btn-test" disabled>Test Compression</button>
+      </div>
+      <div class="http-preview">
+        <div class="http-result-card">
+          <div class="hrc-head">Response Headers</div>
+          <div class="hrc-body">
+            <div class="hrc-row"><span class="hrc-key">content-encoding</span><span class="hrc-val-placeholder">pending</span></div>
+            <div class="hrc-row"><span class="hrc-key">content-type</span><span class="hrc-val-placeholder">pending</span></div>
+            <div class="hrc-row"><span class="hrc-key">content-length</span><span class="hrc-val-placeholder">pending</span></div>
+            <div class="hrc-row"><span class="hrc-key">vary</span><span class="hrc-val-placeholder">pending</span></div>
+            <div class="hrc-row"><span class="hrc-key">cache-control</span><span class="hrc-val-placeholder">pending</span></div>
+          </div>
+        </div>
+        <div class="http-result-card">
+          <div class="hrc-head">Compression Analysis</div>
+          <div class="hrc-body">
+            <div class="hrc-row"><span class="hrc-key">gzip enabled</span><span class="badge-pending">pending</span></div>
+            <div class="hrc-row"><span class="hrc-key">brotli enabled</span><span class="badge-pending">pending</span></div>
+            <div class="hrc-row"><span class="hrc-key">compressed size</span><span class="hrc-val-placeholder">pending</span></div>
+            <div class="hrc-row"><span class="hrc-key">uncompressed size</span><span class="hrc-val-placeholder">pending</span></div>
+            <div class="hrc-row"><span class="hrc-key">reduction</span><span class="hrc-val-placeholder">pending</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="http-checklist">
+        <div class="hcl-head">What this test checks</div>
+        <div class="hcl-item"><span class="hcl-icon">&#128230;</span><span>Content-Encoding header &mdash; gzip, br (brotli), deflate, or none</span></div>
+        <div class="hcl-item"><span class="hcl-icon">&#128202;</span><span>Compressed vs uncompressed response size and reduction percentage</span></div>
+        <div class="hcl-item"><span class="hcl-icon">&#128736;</span><span>Vary: Accept-Encoding header &mdash; required for CDN caching of compressed responses</span></div>
+        <div class="hcl-item"><span class="hcl-icon">&#9889;</span><span>Cache-Control headers &mdash; correct caching of compressed assets</span></div>
+        <div class="hcl-item"><span class="hcl-icon">&#128274;</span><span>HTTPS &mdash; required for brotli compression in most browsers</span></div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <section class="content-section">
+    <span class="section-eyebrow">// Two types of HTML compression</span>
+    <h3>HTML Minification vs HTTP Compression &mdash; What Is the Difference?</h3>
+    <p>Both techniques reduce the amount of data transferred when a browser loads your page, but they work at different levels and can be combined for maximum impact.</p>
+    <div class="method-grid">
+      <div class="method-card">
+        <p class="mc-eye">Client tool</p>
+        <strong>HTML Minification</strong>
+        <p>Removes whitespace, comments, optional closing tags, and redundant attributes from HTML source. Typical reduction: 5-20%.</p>
+      </div>
+      <div class="method-card">
+        <p class="mc-eye">Server config</p>
+        <strong>gzip Compression</strong>
+        <p>The web server compresses HTML before sending. The browser decompresses automatically. Typical reduction: 70-80%. Configured in Apache, Nginx, or CDN.</p>
+      </div>
+      <div class="method-card">
+        <p class="mc-eye">Server config</p>
+        <strong>Brotli Compression</strong>
+        <p>15-25% better than gzip for HTML. Requires HTTPS. Supported by all modern browsers. Typical reduction: 75-85%. Available in Nginx 1.11.6+.</p>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <section class="content-section">
+    <span class="section-eyebrow">// Common questions</span>
+    <h3>What Developers Ask About HTML Compression</h3>
+    <div class="dense-block">
+      <p><strong>Does HTML minification break my website?</strong><br>
+      Removing whitespace between block elements is always safe. Whitespace inside inline elements can sometimes affect visual spacing. Removing comments is safe unless you use conditional IE comments. Minifying inline JavaScript is the riskiest step &mdash; always test after enabling this option.</p>
+      <p><strong>How do I check if gzip is enabled on my server?</strong><br>
+      In Chrome DevTools: open Network tab, click any HTML request, check Response Headers for <code>content-encoding: gzip</code> or <code>content-encoding: br</code>. In curl: run <code>curl -H "Accept-Encoding: gzip" -I https://yoursite.com</code>. The HTTP Compression Test tab (coming soon) automates this.</p>
+      <p><strong>Should I use gzip or brotli?</strong><br>
+      Use brotli if your server supports it &mdash; better compression with no downside for modern browsers. Keep gzip as a fallback. Most CDNs (Cloudflare, Fastly, AWS CloudFront) support both automatically. For Nginx, install the <code>ngx_brotli</code> module and configure both.</p>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <section class="content-section">
+    <span class="section-eyebrow">// FAQ</span>
+    <h3>Frequently Asked Questions</h3>
+    <div class="faq-list">
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">What is HTML compression?<span class="faq-arrow">&#9660;</span></button>
+        <div class="faq-a">HTML compression refers to two techniques: minification (removing whitespace and comments) and HTTP compression (gzip/brotli from the server). Minification reduces raw file size by 5-20%. HTTP compression reduces transfer size by 70-85%. Use both for maximum impact.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">How much does gzip compress HTML?<span class="faq-arrow">&#9660;</span></button>
+        <div class="faq-a">gzip typically compresses HTML by 70-80%. A 100KB file becomes approximately 15-25KB for transfer. Brotli achieves 75-85%. The exact ratio depends on content repetition.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">Does HTML compression affect SEO?<span class="faq-arrow">&#9660;</span></button>
+        <div class="faq-a">Yes, indirectly. Page speed is a ranking factor. HTML compression reduces TTFB and improves LCP. Google PageSpeed Insights flags missing text compression as an opportunity. Enabling gzip/brotli is one of the fastest performance wins.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">Why does minification save only 5-20% while gzip saves 70%?<span class="faq-arrow">&#9660;</span></button>
+        <div class="faq-a">gzip finds repeated byte sequences and replaces them with short references &mdash; HTML has huge repetition in tags and attributes. Minification only removes whitespace, a small fraction of file size. Minification plus gzip is better than gzip alone.</div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <p>html-compression-test &middot; free &middot; browser-only &middot; no login</p>
+    <p>minify &middot; gzip &middot; brotli &middot; http compression</p>
+  </div>
+</footer>
+
+<script src="app.js"></script>
+
+</body>
+</html>
