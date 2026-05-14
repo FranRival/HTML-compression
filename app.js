@@ -180,7 +180,7 @@ function toggleFaq(btn) {
 // ============================================
 
 // Configuración del backend
-const BACKEND_URL = ‘html-compression-production.up.railway.app’; // Reemplazar cuando tengas la URL de Railway
+const BACKEND_URL = 'https://html-compression-production.up.railway.app'; // Reemplazar cuando tengas la URL de Railway
 
 // Función principal de testing HTTP
 async function testHTTPCompression() {
