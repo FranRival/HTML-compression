@@ -211,7 +211,7 @@ clearHTTPResults();
 try {
 console.log(‘Testing:’, url);
 
-```
+
 // Llamar al backend
 const response = await fetch(`${BACKEND_URL}/api/test-compression`, {
   method: 'POST',
@@ -231,7 +231,7 @@ if (!response.ok || !data.success) {
 
 // Mostrar resultados
 displayHTTPResults(data);
-```
+
 
 } catch (error) {
 console.error(‘Test error:’, error);
@@ -269,7 +269,7 @@ data.compression.gzipEnabled ? ‘✅ Yes’ : ‘❌ No’,
 data.compression.gzipEnabled ? ‘var(–green)’ : ‘var(–red)’
 );
 
-```
+
 // Row 2: Brotli enabled
 updateAnalysisRow(analysisRows[1],
   data.compression.brotliEnabled ? '✅ Yes' : '❌ No',
@@ -295,7 +295,7 @@ updateAnalysisRow(analysisRows[4],
   data.sizes.reduction + '%',
   reductionColor
 );
-```
+
 
 }
 
@@ -368,7 +368,7 @@ rec.severity === ‘warning’ ? ‘var(–orange-bg)’ :
 rec.severity === ‘success’ ? ‘var(–green-bg)’ :
 ‘var(–accent-dim)’;
 
-```
+
 const borderColor = rec.severity === 'critical' ? 'var(--red-border)' :
                    rec.severity === 'warning' ? 'var(--orange-border)' :
                    rec.severity === 'success' ? 'var(--green-border)' :
@@ -396,7 +396,7 @@ recEl.innerHTML = `
   <span style="color: var(--ink-muted);">${rec.action}</span>
 `;
 recsContainer.appendChild(recEl);
-```
+
 
 });
 }
