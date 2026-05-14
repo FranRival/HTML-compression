@@ -176,263 +176,194 @@ function toggleFaq(btn) {
 }
 
 // ============================================
-// HTTP COMPRESSION TEST - Agregar a app.js
+// HTTP COMPRESSION TEST
 // ============================================
 
-// Configuración del backend
-const BACKEND_URL = 'https://html-compression-production.up.railway.app'; // Reemplazar cuando tengas la URL de Railway
+const BACKEND_URL = 'https://html-compression-production.up.railway.app';
 
-// Función principal de testing HTTP
 async function testHTTPCompression() {
-const urlInput = document.getElementById(‘urlInput’);
-const url = urlInput.value.trim();
-const testBtn = document.querySelector(’.btn-test’);
+  var urlInput = document.getElementById('urlInput');
+  var url = urlInput.value.trim();
+  var testBtn = document.querySelector('.btn-test');
 
-// Validación básica
-if (!url) {
-alert(‘Please enter a URL’);
-urlInput.focus();
-return;
+  if (!url) {
+    alert('Please enter a URL');
+    urlInput.focus();
+    return;
+  }
+
+  try {
+    new URL(url);
+  } catch (e) {
+    alert('Invalid URL format. Use https://example.com');
+    return;
+  }
+
+  testBtn.disabled = true;
+  testBtn.textContent = 'Testing…';
+  clearHTTPResults();
+
+  try {
+    console.log('Testing:', url);
+
+    var response = await fetch(BACKEND_URL + '/api/test-compression', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ url: url })
+    });
+
+    var data = await response.json();
+
+    if (!response.ok || !data.success) {
+      showHTTPError(data.error || 'Unknown error', data.code);
+      return;
+    }
+
+    displayHTTPResults(data);
+
+  } catch (error) {
+    console.error('Test error:', error);
+    showHTTPError(
+      error.message || 'Failed to test URL. Check the URL and try again.',
+      'NETWORK_ERROR'
+    );
+  } finally {
+    testBtn.disabled = false;
+    testBtn.textContent = 'Test Compression';
+  }
 }
 
-// Validar formato URL
-try {
-new URL(url);
-} catch (e) {
-alert(‘Invalid URL format. Use https://example.com’);
-return;
-}
-
-// UI: mostrar estado loading
-testBtn.disabled = true;
-testBtn.textContent = ‘Testing…’;
-clearHTTPResults();
-
-try {
-console.log(‘Testing:’, url);
-
-
-// Llamar al backend
-const response = await fetch(`${BACKEND_URL}/api/test-compression`, {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json'
-  },
-  body: JSON.stringify({ url }),
-  timeout: 12000
-});
-
-const data = await response.json();
-
-if (!response.ok || !data.success) {
-  showHTTPError(data.error || 'Unknown error', data.code);
-  return;
-}
-
-// Mostrar resultados
-displayHTTPResults(data);
-
-
-} catch (error) {
-console.error(‘Test error:’, error);
-showHTTPError(
-error.message || ‘Failed to test URL. Check the URL and try again.’,
-‘NETWORK_ERROR’
-);
-} finally {
-testBtn.disabled = false;
-testBtn.textContent = ‘Test Compression’;
-}
-}
-
-// Mostrar resultados en la UI
 function displayHTTPResults(data) {
-// Response Headers
-document.querySelectorAll(’.hrc-row’).forEach(row => {
-const key = row.querySelector(’.hrc-key’).textContent.toLowerCase().replace(/-/g, ‘-’);
-const headerKey = key.replace(/\s+/g, ‘-’);
-const value = data.headers[headerKey] || data.headers[key] || ‘—’;
-const valSpan = row.querySelector(‘span:last-child’);
-if (valSpan) {
-valSpan.className = ‘’;
-valSpan.textContent = value;
-valSpan.style.color = ‘var(–ink)’;
-}
-});
+  var headerRows = document.querySelectorAll('.http-result-card:first-child .hrc-row');
+  
+  headerRows.forEach(function(row) {
+    var key = row.querySelector('.hrc-key').textContent.toLowerCase().replace(/\s+/g, '-');
+    var valSpan = row.querySelector('span:last-child');
+    var value = '—';
+    
+    if (key === 'content-encoding' && data.headers['content-encoding']) {
+      value = data.headers['content-encoding'];
+    } else if (key === 'content-type' && data.headers['content-type']) {
+      value = data.headers['content-type'];
+    } else if (key === 'content-length' && data.headers['content-length']) {
+      value = data.headers['content-length'];
+    } else if (key === 'vary' && data.headers['vary']) {
+      value = data.headers['vary'];
+    } else if (key === 'cache-control' && data.headers['cache-control']) {
+      value = data.headers['cache-control'];
+    }
+    
+    if (valSpan) {
+      valSpan.className = '';
+      valSpan.textContent = value;
+      valSpan.style.color = 'var(--ink)';
+    }
+  });
 
-// Compression Analysis
-const analysisRows = document.querySelectorAll(’.http-result-card:nth-child(2) .hrc-row’);
-if (analysisRows.length >= 5) {
-// Row 1: Gzip enabled
-updateAnalysisRow(analysisRows[0],
-data.compression.gzipEnabled ? ‘✅ Yes’ : ‘❌ No’,
-data.compression.gzipEnabled ? ‘var(–green)’ : ‘var(–red)’
-);
+  var analysisRows = document.querySelectorAll('.http-result-card:nth-child(2) .hrc-row');
+  if (analysisRows.length >= 5) {
+    updateAnalysisRow(analysisRows[0],
+      data.compression.gzipEnabled ? '✅ Yes' : '❌ No',
+      data.compression.gzipEnabled ? 'var(--green)' : 'var(--red)'
+    );
 
+    updateAnalysisRow(analysisRows[1],
+      data.compression.brotliEnabled ? '✅ Yes' : '❌ No',
+      data.compression.brotliEnabled ? 'var(--green)' : 'var(--red)'
+    );
 
-// Row 2: Brotli enabled
-updateAnalysisRow(analysisRows[1],
-  data.compression.brotliEnabled ? '✅ Yes' : '❌ No',
-  data.compression.brotliEnabled ? 'var(--green)' : 'var(--red)'
-);
+    updateAnalysisRow(analysisRows[2],
+      fmtBytes(data.sizes.compressed),
+      'var(--ink)'
+    );
 
-// Row 3: Compressed size
-updateAnalysisRow(analysisRows[2],
-  fmtBytes(data.sizes.compressed),
-  'var(--ink)'
-);
+    updateAnalysisRow(analysisRows[3],
+      fmtBytes(data.sizes.uncompressed),
+      'var(--ink-muted)'
+    );
 
-// Row 4: Uncompressed size
-updateAnalysisRow(analysisRows[3],
-  fmtBytes(data.sizes.uncompressed),
-  'var(--ink-muted)'
-);
+    var reductionColor = data.sizes.reduction >= 70 ? 'var(--green)' : 
+                        data.sizes.reduction >= 50 ? 'var(--orange)' : 'var(--red)';
+    updateAnalysisRow(analysisRows[4],
+      data.sizes.reduction + '%',
+      reductionColor
+    );
+  }
 
-// Row 5: Reduction
-const reductionColor = data.sizes.reduction >= 70 ? 'var(--green)' : 
-                      data.sizes.reduction >= 50 ? 'var(--orange)' : 'var(--red)';
-updateAnalysisRow(analysisRows[4],
-  data.sizes.reduction + '%',
-  reductionColor
-);
-
-
-}
-
-// Checklist visual
-updateCompressionChecklist(data.compression);
-
-// Mostrar recomendaciones si existen
-if (data.recommendations && data.recommendations.length > 0) {
-displayRecommendations(data.recommendations);
-}
-
-// Mostrar stats row si está oculto
-const statsRow = document.getElementById(‘statsRow’);
-if (statsRow) {
-statsRow.style.display = ‘flex’;
-}
+  if (data.recommendations && data.recommendations.length > 0) {
+    displayRecommendations(data.recommendations);
+  }
 }
 
-// Helper: actualizar fila de análisis
 function updateAnalysisRow(row, value, color) {
-const valSpan = row.querySelector(‘span:last-child’);
-if (valSpan) {
-valSpan.className = ‘’;
-valSpan.textContent = value;
-valSpan.style.color = color;
-}
-}
-
-// Mostrar checklist de compresión
-function updateCompressionChecklist(compression) {
-const checklist = document.querySelector(’.http-checklist’);
-if (!checklist) return;
-
-// Aquí puedes actualizar visualmente qué compresiones están habilitadas
-const items = checklist.querySelectorAll(’.hcl-item’);
-items.forEach(item => {
-const icon = item.querySelector(’.hcl-icon’);
-if (icon) {
-if (item.textContent.includes(‘gzip’) && compression.gzipEnabled) {
-icon.textContent = ‘✅’;
-icon.style.color = ‘var(–green)’;
-} else if (item.textContent.includes(‘Brotli’) && compression.brotliEnabled) {
-icon.textContent = ‘✅’;
-icon.style.color = ‘var(–green)’;
-} else if (item.textContent.includes(‘Accept-Encoding’)) {
-icon.textContent = ‘✅’;
-icon.style.color = ‘var(–green)’;
-}
-}
-});
+  var valSpan = row.querySelector('span:last-child');
+  if (valSpan) {
+    valSpan.className = '';
+    valSpan.textContent = value;
+    valSpan.style.color = color;
+  }
 }
 
-// Mostrar recomendaciones
 function displayRecommendations(recommendations) {
-// Crear container si no existe
-let recsContainer = document.getElementById(‘recommendationsContainer’);
-if (!recsContainer) {
-const httpWrap = document.querySelector(’.http-wrap’);
-recsContainer = document.createElement(‘div’);
-recsContainer.id = ‘recommendationsContainer’;
-recsContainer.style.marginTop = ‘24px’;
-httpWrap.appendChild(recsContainer);
+  var recsContainer = document.getElementById('recommendationsContainer');
+  if (!recsContainer) {
+    var httpWrap = document.querySelector('.http-wrap');
+    recsContainer = document.createElement('div');
+    recsContainer.id = 'recommendationsContainer';
+    recsContainer.style.marginTop = '24px';
+    httpWrap.appendChild(recsContainer);
+  }
+
+  recsContainer.innerHTML = '<div style="margin-bottom: 12px; padding: 0 24px;"><span class="section-eyebrow" style="display: block;">// Recommendations</span></div>';
+
+  recommendations.forEach(function(rec) {
+    var bgColor = rec.severity === 'critical' ? 'var(--red-bg)' :
+                 rec.severity === 'warning' ? 'var(--orange-bg)' :
+                 rec.severity === 'success' ? 'var(--green-bg)' :
+                 'var(--accent-dim)';
+
+    var borderColor = rec.severity === 'critical' ? 'var(--red-border)' :
+                     rec.severity === 'warning' ? 'var(--orange-border)' :
+                     rec.severity === 'success' ? 'var(--green-border)' :
+                     'rgba(14,165,233,0.2)';
+
+    var textColor = rec.severity === 'critical' ? 'var(--red)' :
+                   rec.severity === 'warning' ? 'var(--orange)' :
+                   rec.severity === 'success' ? 'var(--green)' :
+                   'var(--accent)';
+
+    var recEl = document.createElement('div');
+    recEl.style.cssText = 'background: ' + bgColor + '; border: 1px solid ' + borderColor + '; border-radius: 6px; padding: 12px 14px; margin-bottom: 10px; font-size: 13px; line-height: 1.6; margin-left: 24px; margin-right: 24px;';
+    recEl.innerHTML = '<strong style="color: ' + textColor + '; display: block; margin-bottom: 3px;">' + rec.message + '</strong><span style="color: var(--ink-muted);">' + rec.action + '</span>';
+    recsContainer.appendChild(recEl);
+  });
 }
 
-recsContainer.innerHTML = ‘<div style="margin-bottom: 12px; padding: 0 24px;"><span class="section-eyebrow" style="display: block;">// Recommendations</span></div>’;
-
-recommendations.forEach(rec => {
-const bgColor = rec.severity === ‘critical’ ? ‘var(–red-bg)’ :
-rec.severity === ‘warning’ ? ‘var(–orange-bg)’ :
-rec.severity === ‘success’ ? ‘var(–green-bg)’ :
-‘var(–accent-dim)’;
-
-
-const borderColor = rec.severity === 'critical' ? 'var(--red-border)' :
-                   rec.severity === 'warning' ? 'var(--orange-border)' :
-                   rec.severity === 'success' ? 'var(--green-border)' :
-                   'rgba(14,165,233,0.2)';
-
-const textColor = rec.severity === 'critical' ? 'var(--red)' :
-                 rec.severity === 'warning' ? 'var(--orange)' :
-                 rec.severity === 'success' ? 'var(--green)' :
-                 'var(--accent)';
-
-const recEl = document.createElement('div');
-recEl.style.cssText = `
-  background: ${bgColor};
-  border: 1px solid ${borderColor};
-  border-radius: 6px;
-  padding: 12px 14px;
-  margin-bottom: 10px;
-  font-size: 13px;
-  line-height: 1.6;
-  margin-left: 24px;
-  margin-right: 24px;
-`;
-recEl.innerHTML = `
-  <strong style="color: ${textColor}; display: block; margin-bottom: 3px;">${rec.message}</strong>
-  <span style="color: var(--ink-muted);">${rec.action}</span>
-`;
-recsContainer.appendChild(recEl);
-
-
-});
-}
-
-// Mostrar error
 function showHTTPError(message, code) {
-const httpWrap = document.querySelector(’.http-wrap’);
+  var httpWrap = document.querySelector('.http-wrap');
+  var errorContainer = document.getElementById('errorContainer');
+  
+  if (!errorContainer) {
+    errorContainer = document.createElement('div');
+    errorContainer.id = 'errorContainer';
+    httpWrap.insertBefore(errorContainer, httpWrap.querySelector('.url-row').nextSibling);
+  }
 
-let errorContainer = document.getElementById(‘errorContainer’);
-if (!errorContainer) {
-errorContainer = document.createElement(‘div’);
-errorContainer.id = ‘errorContainer’;
-httpWrap.insertBefore(errorContainer, httpWrap.querySelector(’.url-row’).nextSibling);
+  errorContainer.innerHTML = '<div style="background: var(--red-bg); border: 1px solid var(--red-border); border-radius: 6px; padding: 14px 16px; margin-bottom: 20px; color: var(--red);"><strong style="display: block; margin-bottom: 4px;">❌ Test Failed</strong><span style="color: var(--ink-muted);">' + message + '</span><span style="font-family: var(--mono); font-size: 10px; color: var(--ink-dim); display: block; margin-top: 6px;">[' + code + ']</span></div>';
 }
 
-errorContainer.innerHTML = `<div style="background: var(--red-bg); border: 1px solid var(--red-border); border-radius: 6px; padding: 14px 16px; margin-bottom: 20px; color: var(--red);"> <strong style="display: block; margin-bottom: 4px;">❌ Test Failed</strong> <span style="color: var(--ink-muted);">${message}</span> <span style="font-family: var(--mono); font-size: 10px; color: var(--ink-dim); display: block; margin-top: 6px;">[${code}]</span> </div>`;
-}
-
-// Limpiar resultados previos
 function clearHTTPResults() {
-const errorContainer = document.getElementById(‘errorContainer’);
-if (errorContainer) errorContainer.innerHTML = ‘’;
+  var errorContainer = document.getElementById('errorContainer');
+  if (errorContainer) errorContainer.innerHTML = '';
 
-const recsContainer = document.getElementById(‘recommendationsContainer’);
-if (recsContainer) recsContainer.innerHTML = ‘’;
+  var recsContainer = document.getElementById('recommendationsContainer');
+  if (recsContainer) recsContainer.innerHTML = '';
 
-// Limpiar filas de análisis
-document.querySelectorAll(’.hrc-row span:last-child’).forEach(span => {
-span.className = ‘hrc-val-placeholder’;
-span.textContent = ‘pending’;
-span.style.color = ‘’;
-});
+  document.querySelectorAll('.hrc-row span:last-child').forEach(function(span) {
+    span.className = 'hrc-val-placeholder';
+    span.textContent = 'pending';
+    span.style.color = '';
+  });
 }
-
-// Conectar el botón en el HTML
-// En tu index.html, busca: <button class="btn-test" disabled>Test Compression</button>
-// Y reemplaza con:
-// <button class="btn-test" onclick="testHTTPCompression()">Test Compression</button>
-// Y quita el atributo disabled
