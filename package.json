@@ -1,0 +1,24 @@
+{
+  "name": "html-compression-test",
+  "version": "1.0.0",
+  "description": "Free HTML minifier and HTTP compression tester",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": [
+    "html",
+    "compression",
+    "gzip",
+    "brotli",
+    "minifier"
+  ],
+  "author": "Emmanuel Ibarra",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "node-fetch": "^2.7.0"
+  }
+}
