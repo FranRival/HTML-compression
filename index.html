@@ -11,7 +11,7 @@
 
 <meta name="keywords" content="html compression test, html minifier, compress html online, html gzip test, html brotli test, html compression checker, minify html free, html size reducer, gzip compression test, html optimization tool">
 
-<link rel="canonical" href="https://franrivalbigprojects.github.io/html-compression-checker/">
+<link rel="canonical" href="https://htmlcompressionchecker.top/">
 
 <meta property="og:title" content="HTML Compression Test – Minifier and Gzip/Brotli Checker">
 <meta property="og:description" content="Minify HTML to reduce file size and check server gzip/brotli compression. Free, no login.">
@@ -431,40 +431,47 @@ h1 em { font-style: normal; color: var(--accent); }
   box-shadow: var(--shadow);
 }
 
-.coming-banner {
-  background: var(--orange-bg);
-  border: 1px solid var(--orange-border);
-  border-left: 4px solid var(--orange);
-  border-radius: 6px;
-  padding: 14px 16px;
-  margin-bottom: 24px;
-  font-size: 13px;
-  color: var(--orange);
-  line-height: 1.6;
-}
-
-.coming-banner strong { color: #92400e; display: block; margin-bottom: 2px; }
-
 .url-row {
   display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.url-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-dim);
+}
+
+.url-input-row {
+  display: flex;
   gap: 10px;
-  margin-bottom: 20px;
 }
 
 .url-input {
   flex: 1;
-  padding: 11px 14px;
+  padding: 14px 16px;
   border: 1px solid var(--border-dark);
   border-radius: 6px;
   font-family: var(--mono);
-  font-size: 13px;
+  font-size: 14px;
   color: var(--ink);
   background: var(--bg);
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.url-input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(14,165,233,0.1);
 }
 
 .btn-test {
-  padding: 11px 24px;
-  font-size: 14px;
+  padding: 14px 28px;
+  font-size: 15px;
   font-family: var(--sans);
   font-weight: 600;
   background: var(--accent);
@@ -473,6 +480,7 @@ h1 em { font-style: normal; color: var(--accent); }
   border-radius: 6px;
   cursor: pointer;
   transition: opacity 0.15s, transform 0.1s;
+  white-space: nowrap;
 }
 
 .btn-test:hover {
@@ -490,7 +498,6 @@ h1 em { font-style: normal; color: var(--accent); }
   color: var(--ink-muted);
   border-color: var(--border-dark);
 }
-
 
 .http-preview {
   display: grid;
@@ -755,6 +762,8 @@ footer p {
   .method-grid { grid-template-columns: 1fr 1fr; }
   .http-preview { grid-template-columns: 1fr; }
   .toolbar-stats { display: none; }
+  .url-input-row { flex-direction: column; }
+  .btn-test { width: 100%; }
 }
 </style>
 
@@ -774,7 +783,7 @@ footer p {
   <section class="hero">
     <h1><em>HTML Compression Test</em> &mdash; Minifier &amp; Gzip Checker</h1>
     <p class="hero-sub">
-      <strong>Minify HTML</strong> to reduce file size, or test if your server sends <strong>gzip/brotli compression</strong>. See bytes saved, estimated compressed sizes, and optimization recommendations.
+      <strong>Minify HTML</strong> to reduce file size, or test if your server sends <strong>gzip/brotli compression</strong>. See bytes saved, reduction percentage, and optimization recommendations.
     </p>
     <div class="badges">
       <span class="badge accent">HTML minifier</span>
@@ -786,17 +795,17 @@ footer p {
   </section>
 
   <div class="tool-tabs">
-    <button class="tool-tab active" onclick="switchTab('minify', this)">
+    <button class="tool-tab" onclick="switchTab('minify', this)">
       HTML Minifier
       <span class="tab-badge">Live</span>
     </button>
-    <button class="tool-tab" onclick="switchTab('http', this)">
+    <button class="tool-tab active" onclick="switchTab('http', this)">
       HTTP Compression Test
-      <span class="tab-badge-soon"> Live </span>
+      <span class="tab-badge">Live</span>
     </button>
   </div>
 
-  <div class="tab-panel active" id="tab-minify">
+  <div class="tab-panel" id="tab-minify">
     <div class="minifier-wrap">
       <div class="minifier-options">
         <span class="option-label">Options:</span>
@@ -822,92 +831,90 @@ footer p {
         </label>
       </div>
 
-
-  <div class="minifier-panels">
-    <div class="editor-side">
-      <div class="panel-head">
-        <span>Original HTML</span>
-        <span id="origInfo" style="color:var(--ink-dim)"></span>
-      </div>
-      <textarea id="htmlInput" spellcheck="false" oninput="onHtmlChange()"></textarea>
-    </div>
-    <div class="output-side">
-      <div class="panel-head">
-        <span>Minified Output</span>
-        <span id="outInfo" style="color:var(--ink-dim)"></span>
-      </div>
-      <div id="htmlOutput"></div>
-    </div>
-  </div>
-
-  <div class="minifier-toolbar">
-    <button class="btn-compress" onclick="doMinify()">Compress HTML</button>
-    <button class="btn-sec" onclick="doCopyOutput()">Copy</button>
-    <button class="btn-sec" onclick="loadSample()">Sample</button>
-    <button class="btn-sec" onclick="doClear()">Clear</button>
-    <div class="toolbar-stats">
-      <span id="statChars">0 chars</span>
-      <span id="statBytes">0 B</span>
-    </div>
-  </div>
-
-  <div id="statsRow">
-    <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:12px;">
-      <div class="stat-card">
-        <span class="stat-num" id="origSize" style="color:var(--ink-muted)">0</span>
-        <span class="stat-lbl">Original</span>
-      </div>
-      <div class="stat-card">
-        <span class="stat-num" id="minSize" style="color:var(--accent)">0</span>
-        <span class="stat-lbl">Minified</span>
-      </div>
-      <div class="stat-card">
-        <span class="stat-num" id="savedPct" style="color:var(--green)">0%</span>
-        <span class="stat-lbl">Reduced</span>
-      </div>
-      <div class="stat-card">
-        <span class="stat-num" id="savedBytes" style="color:var(--green)">0</span>
-        <span class="stat-lbl">Bytes saved</span>
-      </div>
-    </div>
-    <div class="gzip-row">
-      <div class="gzip-card">
-        <div>
-          <div class="gzip-label">gzip estimate</div>
-          <div class="gzip-note">~75% compression</div>
+      <div class="minifier-panels">
+        <div class="editor-side">
+          <div class="panel-head">
+            <span>Original HTML</span>
+            <span id="origInfo" style="color:var(--ink-dim)"></span>
+          </div>
+          <textarea id="htmlInput" spellcheck="false" oninput="onHtmlChange()"></textarea>
         </div>
-        <div class="gzip-val" id="gzipEst">~0 KB</div>
-      </div>
-      <div class="gzip-card">
-        <div>
-          <div class="gzip-label">brotli estimate</div>
-          <div class="gzip-note">~80% compression</div>
+        <div class="output-side">
+          <div class="panel-head">
+            <span>Minified Output</span>
+            <span id="outInfo" style="color:var(--ink-dim)"></span>
+          </div>
+          <div id="htmlOutput"></div>
         </div>
-        <div class="gzip-val" id="brotliEst">~0 KB</div>
       </div>
-      <div class="gzip-card" style="flex:1;">
-        <div>
-          <div class="gzip-label">Total transfer size (minified + gzip)</div>
-          <div class="gzip-note">What the browser receives</div>
+
+      <div class="minifier-toolbar">
+        <button class="btn-compress" onclick="doMinify()">Compress HTML</button>
+        <button class="btn-sec" onclick="doCopyOutput()">Copy</button>
+        <button class="btn-sec" onclick="loadSample()">Sample</button>
+        <button class="btn-sec" onclick="doClear()">Clear</button>
+        <div class="toolbar-stats">
+          <span id="statChars">0 chars</span>
+          <span id="statBytes">0 B</span>
         </div>
-        <div class="gzip-val" id="transferEst">~0 KB</div>
+      </div>
+
+      <div id="statsRow">
+        <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:12px;">
+          <div class="stat-card">
+            <span class="stat-num" id="origSize" style="color:var(--ink-muted)">0</span>
+            <span class="stat-lbl">Original</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-num" id="minSize" style="color:var(--accent)">0</span>
+            <span class="stat-lbl">Minified</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-num" id="savedPct" style="color:var(--green)">0%</span>
+            <span class="stat-lbl">Reduced</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-num" id="savedBytes" style="color:var(--green)">0</span>
+            <span class="stat-lbl">Bytes saved</span>
+          </div>
+        </div>
+        <div class="gzip-row">
+          <div class="gzip-card">
+            <div>
+              <div class="gzip-label">gzip estimate</div>
+              <div class="gzip-note">~75% compression</div>
+            </div>
+            <div class="gzip-val" id="gzipEst">~0 KB</div>
+          </div>
+          <div class="gzip-card">
+            <div>
+              <div class="gzip-label">brotli estimate</div>
+              <div class="gzip-note">~80% compression</div>
+            </div>
+            <div class="gzip-val" id="brotliEst">~0 KB</div>
+          </div>
+          <div class="gzip-card" style="flex:1;">
+            <div>
+              <div class="gzip-label">Total transfer size (minified + gzip)</div>
+              <div class="gzip-note">What the browser receives</div>
+            </div>
+            <div class="gzip-val" id="transferEst">~0 KB</div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
-</div>
 
-
-  </div>
-
-  <div class="tab-panel" id="tab-http">
+  <div class="tab-panel active" id="tab-http">
     <div class="http-wrap">
-<!-- Banner removed - feature is live -->
-
-
       <div class="url-row">
-        <input class="url-input" type="text" id="urlInput" placeholder="https://example.com">
-        <button class="btn-test" onclick="testHTTPCompression()">Test Compression</button>
+        <div class="url-label">Enter a URL to test compression</div>
+        <div class="url-input-row">
+          <input class="url-input" type="text" id="urlInput" placeholder="https://example.com">
+          <button class="btn-test" onclick="testHTTPCompression()">Test Compression</button>
+        </div>
       </div>
+
       <div class="http-preview">
         <div class="http-result-card">
           <div class="hrc-head">Response Headers</div>
@@ -930,13 +937,14 @@ footer p {
           </div>
         </div>
       </div>
+
       <div class="http-checklist">
         <div class="hcl-head">What this test checks</div>
-        <div class="hcl-item"><span class="hcl-icon">&#128230;</span><span>Content-Encoding header &mdash; gzip, br (brotli), deflate, or none</span></div>
-        <div class="hcl-item"><span class="hcl-icon">&#128202;</span><span>Compressed vs uncompressed response size and reduction percentage</span></div>
-        <div class="hcl-item"><span class="hcl-icon">&#128736;</span><span>Vary: Accept-Encoding header &mdash; required for CDN caching of compressed responses</span></div>
-        <div class="hcl-item"><span class="hcl-icon">&#9889;</span><span>Cache-Control headers &mdash; correct caching of compressed assets</span></div>
-        <div class="hcl-item"><span class="hcl-icon">&#128274;</span><span>HTTPS &mdash; required for brotli compression in most browsers</span></div>
+        <div class="hcl-item"><span class="hcl-icon">📦</span><span>Content-Encoding header — gzip, br (brotli), deflate, or none</span></div>
+        <div class="hcl-item"><span class="hcl-icon">📊</span><span>Compressed vs uncompressed response size and reduction percentage</span></div>
+        <div class="hcl-item"><span class="hcl-icon">🎯</span><span>Vary: Accept-Encoding header — required for CDN caching of compressed responses</span></div>
+        <div class="hcl-item"><span class="hcl-icon">⚡</span><span>Cache-Control headers — correct caching of compressed assets</span></div>
+        <div class="hcl-item"><span class="hcl-icon">🔒</span><span>HTTPS — required for brotli compression in most browsers</span></div>
       </div>
     </div>
   </div>
@@ -945,7 +953,7 @@ footer p {
 
   <section class="content-section">
     <span class="section-eyebrow">// Two types of HTML compression</span>
-    <h3>HTML Minification vs HTTP Compression &mdash; What Is the Difference?</h3>
+    <h3>HTML Minification vs HTTP Compression — What Is the Difference?</h3>
     <p>Both techniques reduce the amount of data transferred when a browser loads your page, but they work at different levels and can be combined for maximum impact.</p>
     <div class="method-grid">
       <div class="method-card">
@@ -973,11 +981,11 @@ footer p {
     <h3>What Developers Ask About HTML Compression</h3>
     <div class="dense-block">
       <p><strong>Does HTML minification break my website?</strong><br>
-      Removing whitespace between block elements is always safe. Whitespace inside inline elements can sometimes affect visual spacing. Removing comments is safe unless you use conditional IE comments. Minifying inline JavaScript is the riskiest step &mdash; always test after enabling this option.</p>
+      Removing whitespace between block elements is always safe. Whitespace inside inline elements can sometimes affect visual spacing. Removing comments is safe unless you use conditional IE comments. Minifying inline JavaScript is the riskiest step — always test after enabling this option.</p>
       <p><strong>How do I check if gzip is enabled on my server?</strong><br>
-      In Chrome DevTools: open Network tab, click any HTML request, check Response Headers for <code>content-encoding: gzip</code> or <code>content-encoding: br</code>. In curl: run <code>curl -H "Accept-Encoding: gzip" -I https://yoursite.com</code>. The HTTP Compression Test tab (coming soon) automates this.</p>
+      In Chrome DevTools: open Network tab, click any HTML request, check Response Headers for <code>content-encoding: gzip</code> or <code>content-encoding: br</code>. In curl: run <code>curl -H "Accept-Encoding: gzip" -I https://yoursite.com</code>. The HTTP Compression Test tab automates this check.</p>
       <p><strong>Should I use gzip or brotli?</strong><br>
-      Use brotli if your server supports it &mdash; better compression with no downside for modern browsers. Keep gzip as a fallback. Most CDNs (Cloudflare, Fastly, AWS CloudFront) support both automatically. For Nginx, install the <code>ngx_brotli</code> module and configure both.</p>
+      Use brotli if your server supports it — better compression with no downside for modern browsers. Keep gzip as a fallback. Most CDNs (Cloudflare, Fastly, AWS CloudFront) support both automatically. For Nginx, install the <code>ngx_brotli</code> module and configure both.</p>
     </div>
   </section>
 
@@ -988,20 +996,20 @@ footer p {
     <h3>Frequently Asked Questions</h3>
     <div class="faq-list">
       <div class="faq-item">
-        <button class="faq-q" onclick="toggleFaq(this)">What is HTML compression?<span class="faq-arrow">&#9660;</span></button>
+        <button class="faq-q" onclick="toggleFaq(this)">What is HTML compression?<span class="faq-arrow">▼</span></button>
         <div class="faq-a">HTML compression refers to two techniques: minification (removing whitespace and comments) and HTTP compression (gzip/brotli from the server). Minification reduces raw file size by 5-20%. HTTP compression reduces transfer size by 70-85%. Use both for maximum impact.</div>
       </div>
       <div class="faq-item">
-        <button class="faq-q" onclick="toggleFaq(this)">How much does gzip compress HTML?<span class="faq-arrow">&#9660;</span></button>
+        <button class="faq-q" onclick="toggleFaq(this)">How much does gzip compress HTML?<span class="faq-arrow">▼</span></button>
         <div class="faq-a">gzip typically compresses HTML by 70-80%. A 100KB file becomes approximately 15-25KB for transfer. Brotli achieves 75-85%. The exact ratio depends on content repetition.</div>
       </div>
       <div class="faq-item">
-        <button class="faq-q" onclick="toggleFaq(this)">Does HTML compression affect SEO?<span class="faq-arrow">&#9660;</span></button>
+        <button class="faq-q" onclick="toggleFaq(this)">Does HTML compression affect SEO?<span class="faq-arrow">▼</span></button>
         <div class="faq-a">Yes, indirectly. Page speed is a ranking factor. HTML compression reduces TTFB and improves LCP. Google PageSpeed Insights flags missing text compression as an opportunity. Enabling gzip/brotli is one of the fastest performance wins.</div>
       </div>
       <div class="faq-item">
-        <button class="faq-q" onclick="toggleFaq(this)">Why does minification save only 5-20% while gzip saves 70%?<span class="faq-arrow">&#9660;</span></button>
-        <div class="faq-a">gzip finds repeated byte sequences and replaces them with short references &mdash; HTML has huge repetition in tags and attributes. Minification only removes whitespace, a small fraction of file size. Minification plus gzip is better than gzip alone.</div>
+        <button class="faq-q" onclick="toggleFaq(this)">Why does minification save only 5-20% while gzip saves 70%?<span class="faq-arrow">▼</span></button>
+        <div class="faq-a">gzip finds repeated byte sequences and replaces them with short references — HTML has huge repetition in tags and attributes. Minification only removes whitespace, a small fraction of file size. Minification plus gzip is better than gzip alone.</div>
       </div>
     </div>
   </section>
