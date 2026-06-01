@@ -179,7 +179,7 @@ function toggleFaq(btn) {
 // HTTP COMPRESSION TEST
 // ============================================
 
-const BACKEND_URL = 'https://html-compression.onrender.com/';
+const BACKEND_URL = 'https://html-compression.onrender.com';
 
 async function testHTTPCompression() {
   var urlInput = document.getElementById('urlInput');
