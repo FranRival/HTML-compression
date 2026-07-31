@@ -5,11 +5,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<meta name="google-site-verification" content="SHTKDoJOgoBaglTXxutp-f9vUaMzxmkmdS6kY_e72BA" />
+<title>HTML Compression Test – Minifier &amp; Gzip/Brotli Checker</title>
 
-<title>HTML Compression Test + Minifier – Reduce Page Size by 70%</title>
-
-<meta name="description" content="Test gzip/brotli compression on your website. Minify HTML, CSS, JavaScript in one place. See bytes saved and get actionable recommendations.">
+<meta name="description" content="Free HTML compression test. Minify HTML to reduce file size, and check if your server sends gzip or brotli compression. See bytes saved, reduction percentage, and optimization tips.">
 
 <meta name="keywords" content="html compression test, html minifier, compress html online, html gzip test, html brotli test, html compression checker, minify html free, html size reducer, gzip compression test, html optimization tool">
 
@@ -758,7 +756,243 @@ footer p {
   margin: 0;
 }
 
+.quick-compress-section {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 28px;
+  margin-bottom: 32px;
+  box-shadow: var(--shadow-md);
+}
+
+.qc-header {
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.qc-header h2 {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 6px;
+  letter-spacing: -0.02em;
+}
+
+.qc-header p {
+  font-size: 14px;
+  color: var(--ink-muted);
+  margin: 0;
+}
+
+.qc-controls {
+  margin-bottom: 24px;
+}
+
+.code-type-selector {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.type-label {
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-dim);
+}
+
+.type-buttons {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.type-btn {
+  padding: 8px 16px;
+  border: 1px solid var(--border-dark);
+  background: var(--white);
+  color: var(--ink-muted);
+  font-size: 13px;
+  font-weight: 500;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: var(--sans);
+}
+
+.type-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--accent-dim);
+}
+
+.type-btn.active {
+  background: var(--accent);
+  color: white;
+  border-color: var(--accent);
+}
+
+.qc-panels {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.qc-input-panel,
+.qc-output-panel {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--white);
+}
+
+.qc-label {
+  padding: 12px 16px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  font-family: var(--mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-dim);
+  font-weight: 600;
+}
+
+#quickInput {
+  flex: 1;
+  min-height: 200px;
+  padding: 14px 16px;
+  font-family: var(--mono);
+  font-size: 12px;
+  line-height: 1.6;
+  border: none;
+  resize: none;
+  color: var(--ink);
+  background: var(--white);
+}
+
+#quickInput:focus {
+  outline: none;
+}
+
+#quickOutput {
+  flex: 1;
+  min-height: 200px;
+  padding: 14px 16px;
+  font-family: var(--mono);
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--ink);
+  background: var(--white);
+  white-space: pre-wrap;
+  word-break: break-all;
+  overflow-y: auto;
+}
+
+.qc-toolbar {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.btn-primary {
+  padding: 12px 28px;
+  font-size: 14px;
+  font-weight: 600;
+  background: var(--accent);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: var(--sans);
+  transition: opacity 0.15s;
+}
+
+.btn-primary:hover {
+  opacity: 0.85;
+}
+
+.btn-secondary {
+  padding: 10px 18px;
+  font-size: 13px;
+  font-weight: 500;
+  background: transparent;
+  color: var(--ink-muted);
+  border: 1px solid var(--border-dark);
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: var(--sans);
+  transition: all 0.15s;
+}
+
+.btn-secondary:hover {
+  color: var(--ink);
+  border-color: var(--accent);
+}
+
+.qc-stats {
+  margin-left: auto;
+  display: flex;
+  gap: 16px;
+}
+
+.qc-stat-text {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--ink-dim);
+}
+
+.section-divider {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 32px 0;
+}
+
 @media (max-width: 640px) {
+  .qc-panels {
+    grid-template-columns: 1fr;
+  }
+  
+  .qc-controls {
+    margin-bottom: 20px;
+  }
+  
+  .code-type-selector {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .type-buttons {
+    justify-content: stretch;
+  }
+  
+  .type-btn {
+    flex: 1;
+  }
+  
+  .qc-toolbar {
+    flex-direction: column;
+  }
+  
+  .btn-primary,
+  .btn-secondary {
+    width: 100%;
+  }
+  
+  .qc-stats {
+    width: 100%;
+    margin-left: 0;
+    justify-content: center;
+  }
+  
   .minifier-panels { grid-template-columns: 1fr; }
   .editor-side { border-right: none; border-bottom: 1px solid var(--border); }
   .method-grid { grid-template-columns: 1fr 1fr; }
@@ -795,6 +1029,47 @@ footer p {
       <span class="badge">Free</span>
     </div>
   </section>
+
+  <section class="quick-compress-section">
+    <div class="qc-header">
+      <h2>Quick Compress</h2>
+      <p>Compress HTML, CSS, JavaScript, or PHP instantly</p>
+    </div>
+
+    <div class="qc-controls">
+      <div class="code-type-selector">
+        <label class="type-label">Code Type:</label>
+        <div class="type-buttons">
+          <button class="type-btn active" data-type="html" onclick="switchCodeType('html', this)">HTML</button>
+          <button class="type-btn" data-type="css" onclick="switchCodeType('css', this)">CSS</button>
+          <button class="type-btn" data-type="js" onclick="switchCodeType('js', this)">JavaScript</button>
+          <button class="type-btn" data-type="php" onclick="switchCodeType('php', this)">PHP</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="qc-panels">
+      <div class="qc-input-panel">
+        <div class="qc-label">Paste your code</div>
+        <textarea id="quickInput" placeholder="Paste your HTML, CSS, JavaScript or PHP code here..." spellcheck="false"></textarea>
+      </div>
+      <div class="qc-output-panel">
+        <div class="qc-label">Compressed output</div>
+        <div id="quickOutput" class="qc-output-text"></div>
+      </div>
+    </div>
+
+    <div class="qc-toolbar">
+      <button class="btn-primary" onclick="quickCompress()">Compress Now</button>
+      <button class="btn-secondary" onclick="copyQuickOutput()">Copy Output</button>
+      <button class="btn-secondary" onclick="clearQuickCompress()">Clear</button>
+      <div class="qc-stats">
+        <span id="quickStats" class="qc-stat-text">Ready to compress</span>
+      </div>
+    </div>
+  </section>
+
+  <hr class="section-divider">
 
   <div class="tool-tabs">
     <button class="tool-tab" onclick="switchTab('minify', this)">
